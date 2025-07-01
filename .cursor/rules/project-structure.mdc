@@ -1,0 +1,13 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Project Structure Guide
+
+This is a Rust project for solving LeetCode problems.
+
+- The main application entry point is `[src/main.rs](mdc:src/main.rs)`.
+- The `[Cargo.toml](mdc:Cargo.toml)` file manages the project's dependencies and metadata.
+- Individual LeetCode solutions are organized as modules within the `[src/solutions/](mdc:src/solutions/)` directory. For example, see `[src/solutions/two_sum.rs](mdc:src/solutions/two_sum.rs)`.
+- The `main` function in `[src/main.rs](mdc:src/main.rs)` demonstrates how to run the solutions.
