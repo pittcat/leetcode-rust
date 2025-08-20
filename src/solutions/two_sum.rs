@@ -8,24 +8,37 @@ pub struct Solution;
 impl Solution {
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
         use std::collections::HashMap;
-        let mut map = HashMap::new();
-        for (i, num) in nums.iter().enumerate() {
-            if let Some(&j) = map.get(&(target - num)) {
-                return vec![j as i32, i as i32];
+        let mut map:HashMap<i32, usize> = HashMap::new(); // 需要 mut 因为要插入数据
+        for (i,&num) in nums.iter().enumerate() {
+            println!("index:{} , value:{}",i,num);
+            if let Some(&j) = map.get(&(target-num)) {
+                return vec![j as i32,i as i32];
+            }else {
+                map.insert(num, i);
             }
-            map.insert(num, i);
+            
         }
         vec![]
+        
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use std::vec;
+
     use super::*;
     #[test]
     fn test_two_sum() {
         let nums = vec![2, 7, 11, 15];
+        let target = 13;
+        assert_eq!(Solution::two_sum(nums, target), vec![0, 2]);
+    }
+    
+    #[test]
+    fn test_two_sum_other_pair() {
+        let nums = vec![2,7,11,15];
         let target = 9;
-        assert_eq!(Solution::two_sum(nums, target), vec![0, 1]);
+        assert_eq!(Solution::two_sum(nums, target),vec![0,1]);
     }
 }

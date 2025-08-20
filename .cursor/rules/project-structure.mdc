@@ -1,13 +1,212 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
-# Project Structure Guide
+# 项目结构指导规则
 
-This is a Rust project for solving LeetCode problems.
+这个文件为 AI 助手提供关于本项目结构的指导信息。
 
-- The main application entry point is `[src/main.rs](mdc:src/main.rs)`.
-- The `[Cargo.toml](mdc:Cargo.toml)` file manages the project's dependencies and metadata.
-- Individual LeetCode solutions are organized as modules within the `[src/solutions/](mdc:src/solutions/)` directory. For example, see `[src/solutions/two_sum.rs](mdc:src/solutions/two_sum.rs)`.
-- The `main` function in `[src/main.rs](mdc:src/main.rs)` demonstrates how to run the solutions.
+## 项目简介
+这是一个用于解决 LeetCode 问题的 Rust 学习项目，专门为有 TypeScript/Python 背景的学习者设计。
+
+## 📂 项目目录结构
+
+```
+leetcode-rust/
+├── Cargo.toml                    # 项目配置文件 
+├── README.md                     # 项目说明文档
+├── .cursor/                      # Cursor 编辑器配置
+│   └── rules/                    # AI 助手规则文件
+│       ├── rust-mentorship.mdc  # Rust 学习指导规则
+│       └── project-structure.mdc # 项目结构说明(本文件)
+├── src/                          # 源代码目录
+│   ├── main.rs                   # 程序入口文件
+│   └── solutions/                # LeetCode 解题模块
+│       ├── mod.rs               # 模块声明文件  
+│       ├── two_sum.rs           # LeetCode 1. 两数之和
+│       ├── add_two_numbers.rs   # LeetCode 2. 两数相加
+│       └── ...                  # 更多题目解答
+└── target/                       # 编译输出目录 (自动生成)
+```
+
+## 🔧 核心文件说明
+
+### `Cargo.toml` - 项目配置
+这是 Rust 项目的配置文件，等价于：
+- Python 的 `requirements.txt` + `setup.py`
+- TypeScript 项目的 `package.json`
+
+```toml
+[package]
+name = "leetcode-rust"           # 项目名称
+version = "0.1.0"                # 版本号  
+edition = "2021"                 # Rust 版本
+
+[dependencies]                   # 依赖包声明
+# 外部库依赖会在这里声明
+```
+
+### `src/main.rs` - 程序入口
+```rust
+// 类似 Python 的 if __name__ == "__main__":
+// 或 TypeScript 的主函数
+
+mod solutions;  // 导入 solutions 模块
+
+fn main() {
+    // 这里可以运行和测试具体的解题函数
+    println!("LeetCode Rust Solutions");
+    
+    // 示例：运行 two_sum 函数
+    use solutions::two_sum::Solution;
+    let nums = vec![2, 7, 11, 15];
+    let target = 9;
+    let result = Solution::two_sum(nums, target);
+    println!("Two Sum Result: {:?}", result);
+}
+```
+
+### `src/solutions/mod.rs` - 模块声明
+```rust
+// 类似 Python 的 __init__.py
+// 声明当前目录下的子模块
+
+pub mod two_sum;           // 公开 two_sum 模块
+pub mod add_two_numbers;   // 公开 add_two_numbers 模块
+// pub mod other_problems; // 更多题目模块
+```
+
+### `src/solutions/问题名.rs` - 具体解题文件
+每个 LeetCode 题目对应一个独立的 `.rs` 文件：
+
+```rust
+// 例如：src/solutions/two_sum.rs
+
+// 题目描述和思路注释
+// LeetCode 1. 两数之和
+// 给定一个整数数组 nums 和一个目标值 target...
+
+pub struct Solution;  // 公开的解题结构体
+
+impl Solution {
+    // 解题函数
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        // 具体实现
+        vec![]
+    }
+}
+
+// 测试模块
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_two_sum() {
+        let nums = vec![2, 7, 11, 15];
+        let target = 9;
+        assert_eq!(Solution::two_sum(nums, target), vec![0, 1]);
+    }
+}
+```
+
+## 🚀 常用命令对比
+
+| 操作 | Python | TypeScript | Rust |
+|------|--------|------------|------|
+| 运行项目 | `python main.py` | `npm start` | `cargo run` |
+| 运行测试 | `python -m pytest` | `npm test` | `cargo test` |
+| 语法检查 | `python -m py_compile` | `tsc --noEmit` | `cargo check` |
+| 构建项目 | - | `npm run build` | `cargo build` |
+| 运行特定测试 | `pytest test_two_sum` | - | `cargo test two_sum` |
+
+## 📦 模块系统对比
+
+### Python 风格
+```python
+# solutions/__init__.py
+from .two_sum import Solution
+
+# main.py  
+from solutions.two_sum import Solution
+result = Solution().two_sum([2,7,11,15], 9)
+```
+
+### TypeScript 风格  
+```typescript
+// solutions/twoSum.ts
+export class Solution {
+    twoSum(nums: number[], target: number): number[] { ... }
+}
+
+// main.ts
+import { Solution } from './solutions/twoSum';
+const solution = new Solution();
+const result = solution.twoSum([2,7,11,15], 9);
+```
+
+### Rust 风格
+```rust
+// solutions/mod.rs
+pub mod two_sum;
+
+// main.rs
+mod solutions;
+use solutions::two_sum::Solution;
+let result = Solution::two_sum(vec![2,7,11,15], 9);
+```
+
+## 🎯 项目组织最佳实践
+
+### 1. 文件命名规范
+- **题目文件**: 使用下划线命名 (`two_sum.rs`, `add_two_numbers.rs`)
+- **函数命名**: 使用下划线命名 (`two_sum`, `add_two_numbers`)  
+- **结构体命名**: 使用大驼峰 (`Solution`)
+
+### 2. 代码组织原则
+- **一题一文件**: 每个 LeetCode 题目独立一个 `.rs` 文件
+- **统一结构体**: 所有题目都使用 `pub struct Solution;`
+- **包含测试**: 每个文件都包含 `#[cfg(test)]` 测试模块
+- **详细注释**: 包含题目描述、解题思路、时间复杂度等
+
+### 3. 模块导入规范
+```rust
+// 在 solutions/mod.rs 中声明所有题目模块
+pub mod two_sum;
+pub mod add_two_numbers;
+pub mod longest_substring;
+// ... 按题目顺序添加
+
+// 在 main.rs 中按需导入
+use solutions::two_sum::Solution;
+```
+
+### 4. 测试组织方式
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_basic_case() {
+        // 测试基本用例
+    }
+    
+    #[test] 
+    fn test_edge_case() {
+        // 测试边界情况
+    }
+}
+```
+
+## 💡 AI 助手指导要点
+
+当帮助学习者时，请注意：
+
+1. **遵循项目结构**: 建议的代码应该符合上述文件组织方式
+2. **使用标准模板**: 新题目应该使用统一的代码模板
+3. **完整的解决方案**: 包括解题代码、测试用例、详细注释
+4. **模块化思维**: 解释 Rust 的模块系统与 Python/TypeScript 的区别
+
+这样的项目结构既符合 Rust 生态的惯例，又便于学习者理解和管理大量 LeetCode 题目！
