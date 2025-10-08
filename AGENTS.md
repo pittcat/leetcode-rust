@@ -1,109 +1,41 @@
-# AGENTS.md
+# Repository Guidelines
 
-## 项目简介
+## Project Structure & Module Organization
+- Source: `src/solutions/` (one file per LeetCode problem, e.g. `two_sum.rs`, `match_basic.rs`, `match_map_get_explained.rs`).
+- Entry: `src/main.rs` for demos and quick local runs.
+- Config: `Cargo.toml`, `Cargo.lock`. Docs: `README.md`, `CLAUDE.md`, `AGENTS.md`.
+- Tests: co-located in each module via `#[cfg(test)]` at the file end.
 
-本项目旨在使用 Rust 语言系统性地刷 LeetCode 算法题，专为具有 Python 背景的开发者设计，帮助他们深入掌握 Rust 语法特性与工程实践。项目结构灵活简洁，便于持续扩展和个人成长学习。
+## Build, Test, and Development Commands
+- `cargo check` — fast type/borrow checks; use during iteration.
+- `cargo build` — compile (debug). `cargo run` — run `main`.
+- `cargo test` — run all tests. Example: `cargo test test_two_sum`.
+- `cargo clippy` — lints; fix warnings before PRs. `cargo fmt` — format.
 
-### 学习目标与指导方式
+## Coding Style & Naming Conventions
+- Use `rustfmt` defaults; 4-space indent; avoid trailing whitespace.
+- Naming: modules/files `snake_case`; types/structs/traits `CamelCase`;
+  functions/methods `snake_case`; constants `SCREAMING_SNAKE_CASE`.
+- Prefer borrowing over cloning; minimize heap allocs; favor iterators and
+  `Option`/`Result` over panics. Keep solutions ergonomic and idiomatic.
+- Per problem: `pub struct Solution;` with methods on `impl Solution`.
 
-作为一个会Python的初学者，本项目将扮演高级 Rust 专家和编程导师的角色，提供以下极其详细和彻底的指导：
+## Testing Guidelines
+- Use Rust’s built-in test framework with `#[test]` inside `#[cfg(test)]`.
+- Name tests descriptively (e.g., `test_two_sum_basic`, `test_edge_cases`).
+- Cover boundaries (empty inputs, duplicates, large values). Keep tests fast
+  and deterministic. Run `cargo test` locally before pushing.
 
-#### 1. 代码审查与优化
-- **逐行分析**：对每一行代码或逻辑块进行分析，识别写得好的部分和可以更符合 Rust 惯用法的部分
-- **错误诊断**：当代码无法编译时，深入解释错误产生的原因，涉及的核心 Rust 概念（如所有权、借用、生命周期），并提供修正后的代码
-- **性能与内存优化**：分析实现的速度和内存使用情况，探讨更高效的实现方式，深入解释 String vs &str、Vec 克隆 vs 借用等选择的性能和内存影响
+## Commit & Pull Request Guidelines
+- Commits: imperative and concise. Prefer Conventional Commits when possible
+  (`feat:`, `fix:`, `docs:`, `refactor:`, `test:`). English preferred; clear
+  Chinese acceptable when needed. Add context in the body if non-trivial.
+- PRs: include summary, rationale, and scope; link issues; show sample I/O for
+  new solutions; update docs if behavior or structure changes. Pass `clippy`,
+  `fmt`, and tests.
 
-#### 2. Rust 核心概念深度解析
-- **所有权、借用和生命周期**：这是从 Python 思维转换的最关键领域，在代码上下文中清晰解释这些概念的工作原理
-- **数据结构选择**：分析所选择的数据结构（如 Vec、HashMap、String 等）是否最优，比较其他可能的选择，解释它们在内存布局、访问速度、插入/删除效率方面的根本差异
-- **错误处理**：展示如何使用 Option 和 Result，解释为什么 Rust 更偏好 Result 而不是像 Python 那样抛出异常，演示如何使用 ? 操作符或 match 语句优雅地处理错误
-- **迭代器和闭包**：对应 Python 的列表推导式和 for 循环，展示如何使用 Rust 的迭代器和函数式方法（如 map、filter、fold）编写更简洁、高效、表达力强的代码，解释"零成本抽象"的优势
-
-#### 3. Python vs Rust 思维转换
-- **对比解释**：明确指出代码中反映"Python式思维"的地方，如过度依赖克隆（类似 Python 自由复制对象）或试图寻找动态类型的痕迹
-- **思维转换指导**：引导从 Python 的"动态和垃圾回收"思维转向 Rust 的"静态类型、所有权和编译时内存管理"思维，学习核心的 Rust 设计哲学
-
-#### 4. 惯用 Rust 解决方案
-完成上述分析后，提供遵循 Rust 社区标准的模范最佳实践解决方案，包含详细注释，解释每个关键决策的理由，作为未来学习的基准。
-
-### 输出要求
-- **清晰结构**：使用 Markdown 格式，用标题、列表、代码块等组织答案，便于阅读
-- **精确语言**：解释技术术语时力求准确
-- **友好态度**：以支持和鼓励的方式写作，如同真正的导师
-
-
-
-## 目录结构
-- `src/solutions/`：每道题的解法/演示模块，每题建议独立一个文件。
-- `src/main.rs`：主程序入口，用于调用各题解模块，演示或测试用。
-- `Cargo.toml`、`Cargo.lock`：Rust 项目配置文件。
-- `README.md`：快速指导文档。
-- `CLAUDE.md`：AI 协作和代码解释的详细要求。
-- `AGENTS.md`：本交接文档。
-
-## 主要模块说明
-
-- `two_sum.rs`：LeetCode 1，两数之和。包含解题代码和单元测试。
-- `match_basic.rs`：Rust `match` 语法最基础用法演示，含 demo 和测试。
-- `match_map_get_explained.rs`：详细解释了 `match map.get()` 在哈希查找中的用法，适合理解所有涉及 map 查找的题型。
-
-## 开发与扩展规范
-
-1. **添加新题解**：
-   - 在 `src/solutions/` 下新建以题目英文名为文件名的 Rust 文件（如 `two_sum.rs`）。
-   - 按如下模板实现：
-     ```rust
-     pub struct Solution;
-     impl Solution {
-         pub fn 方法名(...) -> ... {
-             // 实现
-         }
-     }
-     #[cfg(test)]
-     mod tests {
-         use super::*;
-         #[test]
-         fn test_方法名() {
-             // 测试用例
-         }
-     }
-     ```
-   - 在 `src/main.rs` 里 `pub mod xxx;` 并按需调用。
-
-2. **代码风格**：
-   - 遵循 Rust 社区习惯，尽量避免不必要的 clone、使用引用和所有权管理。
-   - 注释写清核心思路，复杂语法要解释其背后原理。
-   - 模块名、函数名用蛇形，结构体用驼峰。
-
-3. **单元测试**：
-   - 每个题解文件末尾用 `#[cfg(test)]` 加子模块编写测试。
-   - 用 `cargo test` 跑所有用例，用 `cargo test test_函数名` 跑单测。
-
-4. **运行与调试**：
-   - 用 `cargo run` 运行 main 函数（用于演示和临时输出）。
-   - 用 `cargo clippy` 做代码 lint 检查。
-   - 如需依赖第三方库请先更新 `Cargo.toml` 并说明用途。
-
-## 常用命令
-- `cargo run`：运行主程序。
-- `cargo test`：执行全部单元测试。
-- `cargo test test_函数名`：运行指定测试。
-- `cargo check`：快速检查语法。
-- `cargo clippy`：静态分析、风格检查。
-
-## 交接说明与维护建议
-- **扩展**：保持每题一个文件，测试覆盖核心边界案例。
-- **协作**：如多人开发，建议约定题解命名、注释风格、PR 流程。
-- **升级**：如 Rust 版本升级或依赖变化，优先用 `cargo update` 并全量测试。
-- **持续学习**：可将常见算法模式（如哈希表、滑动窗口、二分等）做成模板模块，提升可复用性。
-
-## 重要历史决策
-- 题解均为结构体静态方法，便于与 LeetCode 平台风格兼容。
-- 注重解释 match、所有权、引用等 Rust 关键语法，便于从 Python 思维转变。
-- 项目目前未引入复杂依赖，便于新手跟进。
-
----
-后续开发如有问题，建议先阅读 `CLAUDE.md`、`README.md` 及各模块注释，保持风格一致。如有结构性调整需求，请补充本文件说明变更原因及迁移指引。
-
-交接人已离岗，祝你学习愉快、代码进步！
+## Agent-Specific Notes (if using AI tools)
+- Keep patches minimal and focused; one problem per file under `src/solutions/`.
+- Add unit tests with new solutions; run `cargo fmt` and `cargo clippy`.
+- Avoid heavy dependencies without discussion; document structural changes here.
 
